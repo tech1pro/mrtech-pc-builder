@@ -6,15 +6,17 @@
   <title>Mr Tech – Simple PC Builder</title>
   <style>
     :root{
+      --wrap: 900px;        /* fixed narrow layout width */
+      --fs: 16px;           /* base font size */
       --bg:#0b0e13; --card:#121721; --card2:#0f131b; --ink:#e8eefc; --muted:#a9b4c7;
       --accent:#4ade80; --accent2:#60a5fa; --danger:#f43f5e; --shadow: 0 10px 30px rgba(0,0,0,.35);
     }
     html,body{height:100%}
-    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: radial-gradient(1000px 600px at 10% -10%, #13203a 0%, transparent 60%), linear-gradient(180deg,#0b0e13,#0b0e13); color:var(--ink)}
-    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    body{margin:0; font-size: var(--fs); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: radial-gradient(1000px 600px at 10% -10%, #13203a 0%, transparent 60%), linear-gradient(180deg,#0b0e13,#0b0e13); color:var(--ink)}
+    .wrap{max-width:var(--wrap);margin:0 auto;padding:24px}
     header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px}
     .brand{display:flex;align-items:center;gap:16px}
-    .brand h1{font-size:22px;margin:0}
+    .brand h1{font-size:clamp(18px,2.4vw,22px);margin:0}
     .brand .sub{font-size:12px;color:var(--muted)}
     .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid #1e2735;border-radius:18px;box-shadow:var(--shadow)}
     .grid{display:grid;gap:16px}
@@ -119,7 +121,7 @@
         <button onclick="openTextTab()">Open Text</button>
         <button onclick="downloadTxt()">Download .txt</button>
         <button onclick="printTxt()">Print</button>
-        <span class="hint">Tip: Set your store on Micro Center so links show Cambridge stock.</span>
+        <span class=\"hint\"> <a href=\"https://account.microcenter.com/auth/signin\" target=\"_blank\" rel=\"noopener\">Sign in</a> or <a href=\"https://account.microcenter.com/auth/create\" target=\"_blank\" rel=\"noopener\">create a Micro Center account</a> so product links and in‑store stock display correctly. <\/span>
       </div>
     </section>
 
@@ -167,8 +169,8 @@
     },
     ram: {
       ddr4_16: '16GB (2x8) DDR4-3200',
-      ddr4_32: '32GB (2x16) DDR4-3200',
-      ddr5_32: '32GB (2x16) DDR5-6000',
+      ddr4_32: '32GB DDR4-3200',
+      ddr5_32: '32GB DDR5-6000',
       ddr5_64: '64GB (2x32) DDR5-6000'
     },
     gpu: {
