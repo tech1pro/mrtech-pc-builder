@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mr Tech – Simple PC Builder</title>
+  <style>
+    :root{
+      --bg:#0b0e13; --card:#121721; --card2:#0f131b; --ink:#e8eefc; --muted:#a9b4c7;
+      --accent:#4ade80; --accent2:#60a5fa; --danger:#f43f5e; --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    html,body{height:100%}
+    body{margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: radial-gradient(1000px 600px at 10% -10%, #13203a 0%, transparent 60%), linear-gradient(180deg,#0b0e13,#0b0e13); color:var(--ink)}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:16px}
+    .brand h1{font-size:22px;margin:0}
+    .brand .sub{font-size:12px;color:var(--muted)}
+    .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid #1e2735;border-radius:18px;box-shadow:var(--shadow)}
+    .grid{display:grid;gap:16px}
+    .g2{grid-template-columns:1fr 1fr}
+    .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width:900px){.g2,.g3{grid-template-columns:1fr}}
+    .pad{padding:18px}
+    label{display:block;font-weight:600;margin:.25rem 0 .35rem}
+    input[type="range"]{width:100%}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid #223046;background:#0c111a;color:var(--ink);cursor:pointer;user-select:none}
+    .pill input{accent-color:var(--accent)}
+    .hint{color:var(--muted);font-size:12px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    button{border:0;border-radius:12px;padding:10px 14px;background:linear-gradient(180deg,#1b2b40,#172235);color:var(--ink);cursor:pointer;font-weight:700}
+    button.primary{background:linear-gradient(180deg,#1b3b2c,#152d24); border:1px solid #1e3a2a}
+    button:hover{filter:brightness(1.06)}
+    .muted{color:var(--muted)}
+    .build{display:grid;gap:16px}
+    .part{background:#0c111a;border:1px solid #1b2a3f;border-radius:14px;padding:12px}
+    .part h4{margin:0 0 6px 0; font-size:15px}
+    a{color:var(--accent2);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;border:1px solid #204;background:linear-gradient(180deg,#142130,#0f1725); color:#cde}
+    .row-spread{display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background:#0b1220; border:1px solid #1a2940; padding:2px 6px; border-radius:6px; font-size:12px}
+    .footer{color:#8ea0bb;font-size:12px;margin-top:10px}
+    .warn{border-color:#3b1a25;background:linear-gradient(180deg,#1a0f15,#130d16); color:#f6c2cc}
+    .success{border-color:#1d3726;background:linear-gradient(180deg,#0f1a14,#0d1612); color:#cfead7}
+    .print-only{display:none}
+    @media print{button,.actions,header,.noprint{display:none}.print-only{display:block}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="card pad">
+      <div class="brand">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 17l8-12 8 12H4z" stroke="#6ee7b7" stroke-width="1.5" fill="#0c111a"/><circle cx="12" cy="13" r="2.5" fill="#60a5fa"/></svg>
+        <div>
+          <h1>Mr Tech – Simple PC Builder</h1>
+          <div class="sub">Fast, sane part picks for real people. Links open at Micro Center. <span class="badge">Cambridge store friendly</span></div>
+        </div>
+      </div>
+      <div class="noprint">
+        <div style="text-align:right;font-size:12px;line-height:1.35">
+          <div><strong>Ricky Best — Mr Tech</strong></div>
+          <div>978‑210‑9535 • 261 Rantoul St, Beverly, MA 01915</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="card pad">
+      <div class="grid g3">
+        <div>
+          <label for="use">Primary Use</label>
+          <div class="row" id="use">
+            <label class="pill"><input type="radio" name="use" value="general" checked> General / Office</label>
+            <label class="pill"><input type="radio" name="use" value="gaming"> Gaming</label>
+            <label class="pill"><input type="radio" name="use" value="creator"> Creator / Workstation</label>
+            <label class="pill"><input type="radio" name="use" value="server"> Home Server / NAS</label>
+          </div>
+          <div id="gamingRes" style="display:none;margin-top:8px">
+            <label>Gaming Resolution</label>
+            <div class="row">
+              <label class="pill"><input type="radio" name="res" value="1080p" checked> 1080p</label>
+              <label class="pill"><input type="radio" name="res" value="1440p"> 1440p</label>
+              <label class="pill"><input type="radio" name="res" value="4k"> 4K</label>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label for="budget">Budget (<span id="bval">$1200</span>)</label>
+          <input id="budget" type="range" min="600" max="3000" step="50" value="1200" oninput="bval.textContent='$'+this.value">
+          <div class="hint">Hardware only. App optimizes around sweet‑spot value; prices vary by store/stock.</div>
+        </div>
+        <div>
+          <label>Brand preferences</label>
+          <div class="row">
+            <label class="pill"><input type="radio" name="cpuBrand" value="any" checked> CPU: Any</label>
+            <label class="pill"><input type="radio" name="cpuBrand" value="amd"> CPU: AMD</label>
+            <label class="pill"><input type="radio" name="cpuBrand" value="intel"> CPU: Intel</label>
+          </div>
+          <div class="row" style="margin-top:8px">
+            <label class="pill"><input type="radio" name="gpuBrand" value="any" checked> GPU: Any</label>
+            <label class="pill"><input type="radio" name="gpuBrand" value="nvidia"> GPU: NVIDIA</label>
+            <label class="pill"><input type="radio" name="gpuBrand" value="amd"> GPU: AMD</label>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px" class="row">
+        <label class="pill"><input type="checkbox" id="quiet"> Prioritize quiet/cool</label>
+        <label class="pill"><input type="checkbox" id="wifi"> Built‑in Wi‑Fi required</label>
+        <label class="pill"><input type="checkbox" id="reuseCase"> I already have a case</label>
+        <label class="pill"><input type="checkbox" id="reuseSSD"> I already have storage</label>
+        <label class="pill"><input type="checkbox" id="reuseGPU"> I already have a GPU</label>
+      </div>
+
+      <div class="actions" style="margin-top:14px">
+        <button class="primary" onclick="generate()">Generate Build</button>
+        <button id="copyBtn" onclick="copyText()">Copy Summary</button>
+        <button onclick="openTextTab()">Open Text</button>
+        <button onclick="downloadTxt()">Download .txt</button>
+        <button onclick="printTxt()">Print</button>
+        <span class="hint">Tip: Set your store on Micro Center so links show Cambridge stock.</span>
+      </div>
+    </section>
+
+    <section id="out" class="card pad" aria-live="polite">
+      <div class="muted">Pick your options and hit <span class="kbd">Generate Build</span>.</div>
+    </section>
+
+    <section id="copyFallback" class="card pad" style="display:none">
+      <div class="row-spread"><strong>Clipboard blocked</strong><span class="muted">(your browser/page sandbox disallows clipboard access)</span></div>
+      <div class="hint" style="margin:6px 0 10px">Text is pre‑selected below — press <span class="kbd">Ctrl/Cmd+C</span> to copy, or click <em>Open Text</em> / <em>Download .txt</em>.</div>
+      <textarea id="fallbackTA" rows="8" style="width:100%;background:#0b1220;color:#dbeafe;border:1px solid #1a2940;border-radius:10px;padding:10px"></textarea>
+      <div class="actions" style="margin-top:10px">
+        <button onclick="selectFallback()">Select All</button>
+        <button onclick="downloadTxt()">Download .txt</button>
+      </div>
+    </section>
+
+    <section class="footer">
+      Compatibility is simplified (socket/RAM/PCIe) and biased towards reliable, high‑value picks. Always double‑check fitment (GPU length, cooler height) and current pricing. Mr Tech can tweak any part to taste.
+    </section>
+  </div>
+
+<script>
+  // ————— Micro Center helper
+  const mcSearch = (q) => `https://www.microcenter.com/search/search_results.aspx?Ntt=${encodeURIComponent(q)}`;
+  const storeLink = 'https://www.microcenter.com/site/stores/cambridge.aspx';
+
+  // ————— Curated part buckets (search queries, not hard SKUs)
+  const PARTS = {
+    cpu: {
+      budgetAMD: 'Ryzen 5 5600',
+      budgetIntel: 'Core i5-14400F',
+      midAMD: 'Ryzen 5 7600',
+      midIntel: 'Core i5-14600K',
+      highAMD: 'Ryzen 7 7800X3D',
+      highIntel: 'Core i7-14700K',
+      creatorAMD: 'Ryzen 9 7900',
+      apuAMD: 'Ryzen 5 5600G',
+      apuIntel: 'Core i5-13500'
+    },
+    mobo: {
+      am4: 'B550 ATX motherboard',
+      am5: 'B650 motherboard',
+      lga1700: 'Z690 or B760 LGA1700 ATX motherboard'
+    },
+    ram: {
+      ddr4_16: '16GB (2x8) DDR4-3200',
+      ddr4_32: '32GB (2x16) DDR4-3200',
+      ddr5_32: '32GB (2x16) DDR5-6000',
+      ddr5_64: '64GB (2x32) DDR5-6000'
+    },
+    gpu: {
+      entry: { any:['GeForce RTX 4060','Radeon RX 7600 XT'], nvidia:['GeForce RTX 4060'], amd:['Radeon RX 7600 XT']},
+      mid:   { any:['GeForce RTX 4070 Super','Radeon RX 7700 XT'], nvidia:['GeForce RTX 4070 Super'], amd:['Radeon RX 7700 XT']},
+      high:  { any:['GeForce RTX 4070 Ti Super','Radeon RX 7900 XT'], nvidia:['GeForce RTX 4070 Ti Super'], amd:['Radeon RX 7900 XT']},
+      ultra: { any:['GeForce RTX 4080 Super','Radeon RX 7900 XTX'], nvidia:['GeForce RTX 4080 Super'], amd:['Radeon RX 7900 XTX']}
+    },
+    storage: {
+      fast1tb: '1TB NVMe SSD PCIe 4.0',
+      fast2tb: '2TB NVMe SSD PCIe 4.0'
+    },
+    psu: {
+      bronze550: '550W 80+ Bronze ATX power supply',
+      gold650:   '650W 80+ Gold ATX power supply',
+      gold750:   '750W 80+ Gold ATX power supply',
+      gold850:   '850W 80+ Gold ATX power supply'
+    },
+    case: { airflow: 'ATX case high airflow (e.g., Pop Air / 4000D / H5 Flow)' },
+    cooler: { basic: '120mm tower air cooler', strong: '240mm AIO liquid cooler or 2‑tower air cooler' }
+  };
+
+  function pickGPU(tier, pref){
+    const pool = PARTS.gpu[tier][pref] || PARTS.gpu[tier].any;
+    return pool[0];
+  }
+
+  // ————— Rules engine
+  function decide(inputs){
+    const b = inputs.budget;
+    const use = inputs.use;
+    const res = inputs.res || '1080p';
+    const cpuPref = inputs.cpuBrand;
+    const gpuPref = inputs.gpuBrand;
+
+    let cpu='', socket='', mem='';
+    let gpuTier='entry';
+    let gpuRequired=true;
+
+    if (use==='general'){
+      if (cpuPref==='intel'){ cpu = PARTS.cpu.budgetIntel; socket='lga1700'; mem='ddr4_16'; }
+      else { cpu = PARTS.cpu.budgetAMD; socket='am4'; mem='ddr4_16'; }
+      gpuRequired = false; // iGPU/none is fine for general use
+    } else if (use==='gaming'){
+      // CPU tier by budget
+      if (b < 1400){
+        if (cpuPref==='intel'){ cpu = PARTS.cpu.midIntel; socket='lga1700'; mem='ddr5_32'; }
+        else { cpu = PARTS.cpu.midAMD; socket='am5'; mem='ddr5_32'; }
+      } else if (b < 2000){
+        if (cpuPref==='intel'){ cpu = PARTS.cpu.highIntel; socket='lga1700'; mem='ddr5_32'; }
+        else { cpu = PARTS.cpu.highAMD; socket='am5'; mem='ddr5_32'; }
+      } else {
+        if (cpuPref==='intel'){ cpu = PARTS.cpu.highIntel; socket='lga1700'; mem='ddr5_64'; }
+        else { cpu = PARTS.cpu.highAMD; socket='am5'; mem='ddr5_64'; }
+      }
+      // GPU tier by resolution + budget
+      if (res==='1080p'){
+        gpuTier = (b<1100)? 'entry' : (b<1600? 'mid' : 'high');
+      } else if (res==='1440p'){
+        gpuTier = (b<1300)? 'mid' : (b<2000? 'high' : 'ultra');
+      } else { // 4K
+        gpuTier = (b<1900)? 'high' : 'ultra';
+      }
+    } else if (use==='creator'){
+      if (cpuPref==='intel'){ cpu = PARTS.cpu.highIntel; socket='lga1700'; mem = (b>=2000? 'ddr5_64' : 'ddr5_32'); }
+      else { cpu = PARTS.cpu.creatorAMD; socket='am5'; mem = (b>=2000? 'ddr5_64' : 'ddr5_32'); }
+      gpuTier = (b>=2200)? 'ultra' : 'high';
+    } else if (use==='server'){
+      if (cpuPref==='intel'){ cpu = PARTS.cpu.apuIntel; socket='lga1700'; mem='ddr4_32'; }
+      else { cpu = PARTS.cpu.apuAMD; socket='am4'; mem='ddr4_32'; }
+      gpuRequired = false; // APU/iGPU fine for Plex/NAS
+    }
+
+    // Prefer NVIDIA in creator mode for CUDA unless user forces AMD
+    const gpuPrefFinal = (use==='creator' && gpuPref==='any') ? 'nvidia' : gpuPref;
+    const gpu = gpuRequired ? pickGPU(gpuTier, gpuPrefFinal) : null;
+
+    const mobo = (socket==='am4')? PARTS.mobo.am4 : (socket==='am5'? PARTS.mobo.am5 : PARTS.mobo.lga1700);
+
+    let ram;
+    if (mem==='ddr4_16') ram = PARTS.ram.ddr4_16;
+    else if (mem==='ddr4_32') ram = PARTS.ram.ddr4_32;
+    else if (mem==='ddr5_64') ram = PARTS.ram.ddr5_64;
+    else ram = PARTS.ram.ddr5_32;
+
+    const storage = (use==='server') ? PARTS.storage.fast2tb : (b>=1500? PARTS.storage.fast2tb : PARTS.storage.fast1tb);
+    const psu = (!gpu) ? PARTS.psu.bronze550 : (gpuTier==='ultra' ? PARTS.psu.gold850 : gpuTier==='high' ? PARTS.psu.gold750 : PARTS.psu.gold650);
+    const cooler = (inputs.quiet || b>=1400)? PARTS.cooler.strong : PARTS.cooler.basic;
+
+    return { cpu, mobo, ram, gpu, storage, psu, case: PARTS.case.airflow, cooler, socket, mem,
+      notes: rationale(inputs, {gpuTier, socket, use, res}) };
+  }
+
+  function rationale(inputs, ctx){
+    const out=[];
+    if (ctx.use==='creator') out.push('Creator/Workstation prefers NVIDIA for CUDA acceleration in common editors.');
+    if (ctx.use==='general') out.push('General use keeps it simple and efficient with integrated graphics.');
+    if (ctx.use==='server') out.push('Home server build favors an APU/iGPU and more RAM; add SATA HDDs as needed.');
+    if (ctx.socket==='am5') out.push('AM5 gives DDR5 and a longer upgrade runway.');
+    if (ctx.socket==='am4') out.push('AM4 keeps costs down with mature, proven parts.');
+    if (ctx.use==='gaming'){
+      if (ctx.res==='1080p') out.push('Tuned for high FPS at 1080p.');
+      if (ctx.res==='1440p') out.push('Tuned for 1440p high settings.');
+      if (ctx.res==='4k') out.push('Targets 4K where budget allows.');
+    }
+    if (ctx.gpuTier==='entry') out.push('Entry GPU tier is plenty for esports and lighter titles at 1080p.');
+    if (ctx.gpuTier==='mid') out.push('Mid GPU tier targets 1080p max or 1440p high.');
+    if (ctx.gpuTier==='high') out.push('High GPU tier targets 1440p ultra / entry 4K.');
+    if (ctx.gpuTier==='ultra') out.push('Ultra GPU tier targets 4K or heavy creator workloads.');
+    if (inputs.quiet) out.push('Quiet/cool preference adds a stronger cooler and headroom PSU.');
+    return out;
+  }
+
+  function updateResUI(){
+    const use = document.querySelector('input[name="use"]:checked').value;
+    const sec = document.getElementById('gamingRes');
+    if (sec) sec.style.display = (use==='gaming') ? 'block' : 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelectorAll('input[name="use"]').forEach(el=> el.addEventListener('change', updateResUI));
+    updateResUI();
+  });
+
+  function section(title, items){
+    return `
+      <div class="part">
+        <h4>${title}</h4>
+        ${items.map(it=>`<div class="row-spread"><div>${it.label}</div><div><a class="kbd" href="${mcSearch(it.q)}" target="_blank">Search</a></div></div>`).join('')}
+      </div>`;
+  }
+
+  function asText(build){
+    const lines = [
+      'Mr Tech – Simple PC Builder\n',
+      `CPU: ${build.cpu}`,
+      `Motherboard: ${build.mobo}`,
+      `RAM: ${build.ram}`,
+      build.gpu?`GPU: ${build.gpu}`:'GPU: (reuse) ',
+      build.storage?`Storage: ${build.storage}`:'Storage: (reuse)',
+      `PSU: ${build.psu}`,
+      build.case?`Case: ${build.case}`:'Case: (reuse)',
+      `Cooler: ${build.cooler}`,
+      '', 'Notes: ' + build.notes.join(' | '),
+      '', `Set your store: ${storeLink}`
+    ];
+    return lines.join('\n');
+  }
+
+  // ————— Printable/Download helpers (avoid sandbox blocks)
+  function makeDataURL(text){
+    return 'data:text/plain;charset=utf-8,' + encodeURIComponent(text||'');
+  }
+
+  function createPrintableHTML(text){
+    const safe = (text||'').replace(/[&<>]/g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[s]));
+    return `<!doctype html><html><head><meta charset="utf-8"><title>Mr Tech – Build</title>
+      <style>body{font-family:ui-monospace,Menlo,Consolas,monospace;background:#0b0e13;color:#e8eefc;margin:0;padding:20px}pre{white-space:pre-wrap;word-break:break-word;background:#0b1220;border:1px solid #1a2940;border-radius:12px;padding:14px}</style>
+      </head><body>
+      <pre>${safe}</pre>
+      <script>window.addEventListener('load',()=>{try{window.print()}catch(e){}})<\/script>
+      </body></html>`;
+  }
+
+  function openTextTab(){
+    if (!window.__lastBuildText) generate();
+    const w = window.open('about:blank');
+    if (!w){
+      // Pop-up blocked; fallback
+      showCopyFallback(window.__lastBuildText||'');
+      return;
+    }
+    w.document.open();
+    w.document.write(createPrintableHTML(window.__lastBuildText||''));
+    w.document.close();
+    try{ w.focus() }catch(e){}
+  }
+
+  function printTxt(){
+    // Printing via a dedicated window avoids sandboxed main frame policies
+    openTextTab();
+  }
+
+  function downloadTxt(){
+    if (!window.__lastBuildText) generate();
+    const a = document.createElement('a');
+    a.href = makeDataURL(window.__lastBuildText||'');
+    a.download = 'MrTech_PC_Build.txt';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function generate(){
+    const resRad = document.querySelector('input[name="res"]:checked');
+    const inputs = {
+      use: document.querySelector('input[name="use"]:checked').value,
+      res: resRad ? resRad.value : null,
+      budget: parseInt(document.getElementById('budget').value,10),
+      cpuBrand: document.querySelector('input[name="cpuBrand"]:checked').value,
+      gpuBrand: document.querySelector('input[name="gpuBrand"]:checked').value,
+      quiet: document.getElementById('quiet').checked,
+      wifi: document.getElementById('wifi').checked,
+      reuseCase: document.getElementById('reuseCase').checked,
+      reuseSSD: document.getElementById('reuseSSD').checked,
+      reuseGPU: document.getElementById('reuseGPU').checked
+    };
+
+    const build = decide(inputs);
+
+    // Remove parts if reusing
+    if (inputs.reuseGPU) build.gpu = null;
+    if (inputs.reuseCase) build.case = null;
+    if (inputs.reuseSSD) build.storage = null;
+
+    const blocks = [];
+    blocks.push(section('Core Components', [
+      {label: 'CPU – ' + build.cpu, q: build.cpu},
+      {label: 'Motherboard – ' + build.mobo + (inputs.wifi? ' (with Wi‑Fi)':''), q: inputs.wifi? (build.mobo + ' Wi‑Fi') : build.mobo},
+      {label: 'Memory – ' + build.ram, q: build.ram},
+    ]));
+
+    if (build.gpu){
+      blocks.push(section('Graphics Card', [ {label: build.gpu, q: build.gpu} ]));
+    }
+
+    blocks.push(section('Storage & Power', [
+      ...(build.storage ? [{label: 'Storage – ' + build.storage, q: build.storage}] : []),
+      {label: 'Power Supply – ' + build.psu, q: build.psu},
+    ]));
+
+    if (build.case){
+      blocks.push(section('Case & Cooling', [
+        {label: 'Case – ' + build.case, q: build.case},
+        {label: 'CPU Cooler – ' + build.cooler, q: build.cooler},
+      ]));
+    } else {
+      blocks.push(section('Cooling', [ {label: 'CPU Cooler – ' + build.cooler, q: build.cooler} ]));
+    }
+
+    const tips = `
+      <div class=\"part success\">
+        <div class=\"row-spread\"><strong>Notes</strong><a class=\"kbd\" href=\"${storeLink}\" target=\"_blank\">Cambridge store</a></div>
+        <ul style=\"margin:8px 0 0 18px; padding:0 0 0 0\">
+          ${build.notes.map(n=>`<li>${n}</li>`).join('')}
+        </ul>
+      </div>`;
+
+    const warn = `
+      <div class=\"part warn\">
+        <strong>Heads‑up:</strong> Verify GPU length vs case, cooler height, and PSU connectors. Prices swing daily.
+      </div>`;
+
+    document.getElementById('out').innerHTML = `
+      <div class=\"build\">${blocks.join('')} ${tips} ${warn}</div>
+      <div class=\"noprint\" style=\"margin-top:10px\"><button onclick=\"copyText()\" id=\"copyBtn2\">Copy Summary</button> <button onclick=\"openTextTab()\">Open Text</button> <button onclick=\"downloadTxt()\">Download .txt</button> <button onclick=\"printTxt()\">Print</button></div>
+      <pre class=\"print-only\">${asText(build)}</pre>
+    `;
+
+    window.__lastBuildText = asText(build);
+  }
+
+  // ————— Clipboard-safe copy with graceful fallbacks
+  async function safeCopyText(text){
+    if (!text) return false;
+    try{ if (navigator.clipboard && navigator.clipboard.writeText){ await navigator.clipboard.writeText(text); return true; } }catch(e){ }
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly',''); ta.style.position = 'fixed'; ta.style.top = '-9999px';
+      document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand && document.execCommand('copy'); document.body.removeChild(ta);
+      if (ok) return true;
+    }catch(e){}
+    return false;
+  }
+
+  function showCopyFallback(text){
+    const box = document.getElementById('copyFallback');
+    const ta = document.getElementById('fallbackTA');
+    if (!box || !ta) return;
+    ta.value = text || '';
+    box.style.display = 'block';
+    ta.focus();
+    ta.select();
+  }
+
+  function selectFallback(){
+    const ta = document.getElementById('fallbackTA');
+    if (ta){ ta.focus(); ta.select(); }
+  }
+
+  async function copyText(){
+    if (!window.__lastBuildText){ generate(); }
+    const okay = await safeCopyText(window.__lastBuildText||'');
+    const changeButtons = (msg)=>{
+      document.querySelectorAll('#copyBtn,#copyBtn2').forEach(btn=>{
+        if (!btn) return; const old = btn.textContent; btn.textContent = msg; setTimeout(()=>btn.textContent=old, 1400);
+      });
+    };
+    if (okay){ changeButtons('Copied!'); }
+    else { changeButtons('Clipboard blocked'); showCopyFallback(window.__lastBuildText||''); }
+  }
+
+  // ————— Minimal test harness (shows results in console and below the page)
+  function runTests(){
+    const results = [];
+    const push = (name, cond)=> results.push({name, cond});
+
+    // Test 1: General use should not require a discrete GPU and use Bronze PSU
+    let t = decide({budget:900,use:'general',cpuBrand:'intel',gpuBrand:'any',quiet:false});
+    push('General use → no GPU', t.gpu===null || t.gpu===undefined);
+    push('General use → PSU bronze', /550W|Bronze/.test(t.psu));
+
+    // Test 2: Gaming 1080p, $1200 → mid GPU tier likely (4070S bucket)
+    t = decide({budget:1200,use:'gaming',res:'1080p',cpuBrand:'amd',gpuBrand:'any',quiet:false});
+    push('Gaming 1080p $1200 → not entry GPU', /4070|7700/.test(t.gpu));
+
+    // Test 3: Gaming 4K, $1800 → high tier GPU
+    t = decide({budget:1800,use:'gaming',res:'4k',cpuBrand:'intel',gpuBrand:'any',quiet:false});
+    push('Gaming 4K $1800 → high GPU tier', /4070 Ti|7900 XT/.test(t.gpu));
+
+    // Test 4: Creator $2300, Intel → DDR5_64 and ultra/high GPU
+    t = decide({budget:2300,use:'creator',cpuBrand:'intel',gpuBrand:'any',quiet:false});
+    push('Creator $2300 → DDR5-64', /64GB/.test(t.ram));
+    push('Creator $2300 → powerful GPU', /4080|7900 XTX|4070 Ti|7900 XT/.test(t.gpu));
+
+    // Test 5: Server → APU path, no GPU, 32GB DDR4
+    t = decide({budget:800,use:'server',cpuBrand:'amd',gpuBrand:'any',quiet:false});
+    push('Server → no GPU', t.gpu===null || t.gpu===undefined);
+    push('Server → DDR4-32', /32GB.*DDR4/.test(t.ram));
+
+    // Test 6: asText includes CPU and store link line
+    const sample = asText(decide({budget:1500,use:'gaming',res:'1440p',cpuBrand:'intel',gpuBrand:'any',quiet:true}));
+    push('asText includes CPU', /CPU:\s+/.test(sample));
+    push('asText includes store link text', /Set your store:/.test(sample));
+
+    // Test 7: Fallback panel populates textarea
+    window.__lastBuildText = 'hello world';
+    showCopyFallback(window.__lastBuildText);
+    const ta = document.getElementById('fallbackTA');
+    push('Fallback visible', document.getElementById('copyFallback').style.display==='block');
+    push('Fallback textarea filled', ta && ta.value==='hello world');
+
+    // Test 8: Data URL generation
+    const url = makeDataURL('abc');
+    push('Data URL starts with data:text/plain', /^data:text\/plain/.test(url));
+
+    // Test 9: Printable HTML contains text
+    const html = createPrintableHTML('xyz');
+    push('Printable HTML wraps content', /xyz/.test(html));
+
+    const pass = results.every(r=>r.cond);
+    const host = document.createElement('div');
+    host.style.cssText = `margin:10px 0;color:${pass?'#80e199':'#f6c2cc'};font-size:12px`;
+    host.innerHTML = `<div class="part ${pass?'success':'warn'}"><strong>Inline tests:</strong> ${results.map(r=>`${r.cond?'✔':'✖'} ${r.name}`).join(' • ')}</div>`;
+    document.body.appendChild(host);
+  }
+
+  window.addEventListener('load', runTests);
+</script>
+</body>
+</html>
